@@ -11,11 +11,25 @@ class Product extends Model
 {
     use HasSlug;
     use HasFactory;
+    protected $guarded = ['id'];
 
     public function getSlugOptions(): SlugOptions
     {
         return SlugOptions::create()
             ->generateSlugsFrom('title')
             ->saveSlugsTo('slug');
+    }
+
+    public function product_image()
+    {
+        return $this->hasMany(ProductImage::class);
+    }
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+    public function brand()
+    {
+        return $this->belongsTo(Brand::class);
     }
 }

@@ -1,6 +1,4 @@
 <template>
-    <div>Admin Dashboard</div>
-
     <div class="antialiased bg-gray-50 dark:bg-gray-900">
 
         <!-- navbar start -->

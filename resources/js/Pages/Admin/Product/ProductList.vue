@@ -1,12 +1,40 @@
 <script setup>
 import { usePage } from '@inertiajs/vue3';
+import { ref } from 'vue';
+
 
 const products = usePage().props.products;
-console.log(products);
+// console.log(products);
+
+const isAddProduct = ref(false)
+const dialogVisible = ref(false)
+console.log("dialogVisible default:", dialogVisible.value)
+
+// open add modal
+const openAddModal = () => {
+    isAddProduct.value = true
+    dialogVisible.value = true
+}
 </script>
 
+
+
 <template>
+
     <section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5">
+        <el-dialog v-model="dialogVisible" title="Tips" width="500" :before-close="handleClose">
+            <span>This is a message</span>
+            <template #footer>
+                <div class="dialog-footer">
+                    <el-button @click="dialogVisible = false">Cancel</el-button>
+                    <el-button type="primary" @click="dialogVisible = false">
+                        Confirm
+                    </el-button>
+                </div>
+            </template>
+        </el-dialog>
+
+
         <div class="mx-auto max-w-screen-xl px-4 lg:px-12">
             <!-- Start coding here -->
             <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
@@ -32,7 +60,7 @@ console.log(products);
                     </div>
                     <div
                         class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
-                        <button type="button"
+                        <button type="button" @click="openAddModal"
                             class="flex items-center justify-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
                             <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20"
                                 xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -148,7 +176,7 @@ console.log(products);
                             <tr v-for="product in products" :key="product.id" class="border-b dark:border-gray-700">
                                 <th scope="row"
                                     class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{
-                                    product.title }}</th>
+                                        product.title }}</th>
                                 <td class="px-4 py-3">{{ product.category_id }}</td>
                                 <td class="px-4 py-3">{{ product.brand_id }}</td>
                                 <td class="px-4 py-3">{{ product.quantity }}</td>

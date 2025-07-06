@@ -19,6 +19,7 @@
     },
     "dependencies": {
         "@tailwindcss/vite": "^4.1.11",
+        "element-plus": "^2.10.3",
         "flowbite": "^3.1.2"
     }
 }
