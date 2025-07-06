@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('title', 200);
             $table->string('slug',400);
             $table->integer('quantity');
-            $table->longText('decription')->nullable();
+            $table->longText('description')->nullable();
             $table->boolean('published')->default(0);
             $table->boolean('inStock')->default(0);
             $table->decimal('price', 10, 2);
