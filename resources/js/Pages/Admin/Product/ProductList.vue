@@ -45,6 +45,7 @@ const AddProduct = async () => {
                     showConfirmButton: false,
                     title: page.props.flash.success
                 })
+                window.location.reload();
                 dialogVisible.value = false
                 resetFormData()
             }
