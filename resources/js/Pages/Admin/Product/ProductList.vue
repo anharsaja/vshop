@@ -1,18 +1,82 @@
 <script setup>
-import { usePage } from '@inertiajs/vue3';
+import { usePage, router } from '@inertiajs/vue3';
 import { ref } from 'vue';
 
 
 const products = usePage().props.products;
-// console.log(products);
+const brands = usePage().props.brands;
+const categories = usePage().props.categories;
+
+// product from data
+const id = ref('')
+const title = ref('')
+const price = ref('')
+const quantity = ref('')
+const description = ref('')
+const product_images = ref([])
+const published = ref('')
+const category_id = ref('')
+const brand_id = ref('')
+const inStock = ref('')
+
+const productImages = ref([])
+// end
+
+// add product method
+const AddProduct = async () => {
+    const formData = new FormData();
+    formData.append('title', title.value)
+    formData.append('price', price.value)
+    formData.append('quantity', quantity.value)
+    formData.append('description', description.value)
+    formData.append('brand_id', brand_id.value)
+    formData.append('category_id', category_id.value)
+    for (const image of productImages.value) {
+        formData.append('product_images[]', image.raw)
+    }
+
+    try {
+        await router.post('products/store', formData, {
+            onSuccess: page => {
+                Swal.fire({
+                    toast: true,
+                    icon: 'success',
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    title: page.props.flash.success
+                })
+                dialogVisible.value = false
+                resetFormData()
+            }
+        })
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+// reset data after added
+const resetFormData = () => {
+    id.value = ''
+    title.value = ''
+    price.value = ''
+    quantity.value = ''
+    description.value = ''
+    productImages.value = []
+    // dialogImageUrl.value = ''
+}
 
 const isAddProduct = ref(false)
 const dialogVisible = ref(false)
-console.log("dialogVisible default:", dialogVisible.value)
-
+const editMode = ref(false)
 // open add modal
 const openAddModal = () => {
     isAddProduct.value = true
+    editMode.value = false
+    dialogVisible.value = true
+}
+const openEditModal = (product) => {
+    editMode.value = true
+    isAddProduct.value = false
     dialogVisible.value = true
 }
 </script>
@@ -20,20 +84,70 @@ const openAddModal = () => {
 
 
 <template>
-
+    <!-- dialog for adding product or editing-->
     <section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5">
-        <el-dialog v-model="dialogVisible" title="Tips" width="500" :before-close="handleClose">
-            <span>This is a message</span>
-            <template #footer>
-                <div class="dialog-footer">
-                    <el-button @click="dialogVisible = false">Cancel</el-button>
-                    <el-button type="primary" @click="dialogVisible = false">
-                        Confirm
-                    </el-button>
+        <el-dialog v-model="dialogVisible" :title="editMode ? 'Edit Product' : 'Adding Product'" width="30%"
+            :before-close="handleClose">
+            <!-- form start -->
+            <form class="max-w-md mx-auto" @submit.prevent="AddProduct">
+                <div class="relative z-0 w-full mb-5 group">
+                    <input v-model="title" type="text" name="floating_title" id="floating_title"
+                        class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                        placeholder=" " required />
+                    <label for="floating_title"
+                        class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Title</label>
                 </div>
-            </template>
+                <div class="relative z-0 w-full mb-5 group">
+                    <input v-model="price" type="text" name="floating_price" id="floating_price"
+                        class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                        placeholder=" " required />
+                    <label for="floating_price"
+                        class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Price</label>
+                </div>
+                <div class="relative z-0 w-full mb-5 group">
+                    <input v-model="quantity" type="number" name="qty" id="floating_qty"
+                        class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                        placeholder=" " required />
+                    <label for="floating_qty"
+                        class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Quantity</label>
+                </div>
+
+                <!-- option -->
+                <div class="relative z-0 w-full mb-5 group">
+                    <!-- <label for="category"
+                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select Category</label> -->
+                    <select id="category" v-model="category_id"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <option v-for="category in categories" :key="category.id" :value="category.id" selected>{{
+                            category.name }}</option>
+                    </select>
+                </div>
+
+                <div class="relative z-0 w-full mb-5 group">
+                    <!-- <label for="brand"
+                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select Brand</label> -->
+                    <select id="brand" v-model="brand_id"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <option v-for="brand in brands" :key="brand.id" :value="brand.id" selected>{{ brand.name }}
+                        </option>
+                    </select>
+                </div>
+
+                <div class="relative z-0 w-full mb-5 group">
+                    <label for="message"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Description</label>
+                    <textarea v-model="description" id="message" rows="4"
+                        class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        placeholder="Write the product description ..."></textarea>
+                </div>
+
+
+                <button type="submit"
+                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
+            </form>
         </el-dialog>
 
+        <!-- dialog end -->
 
         <div class="mx-auto max-w-screen-xl px-4 lg:px-12">
             <!-- Start coding here -->
@@ -184,8 +298,8 @@ const openAddModal = () => {
                                 <td class="px-4 py-3">{{ product.published }}</td>
                                 <td class="px-4 py-3">{{ product.price }}</td>
                                 <td class="px-4 py-3 flex items-center justify-end">
-                                    <button id="apple-imac-27-dropdown-button"
-                                        data-dropdown-toggle="apple-imac-27-dropdown"
+                                    <button :id="`dropdown-button-${product.id}`"
+                                        :data-dropdown-toggle="`dropdown-${product.id}`"
                                         class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
                                         type="button">
                                         <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20"
@@ -194,7 +308,7 @@ const openAddModal = () => {
                                                 d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
                                         </svg>
                                     </button>
-                                    <div id="apple-imac-27-dropdown"
+                                    <div :id="`dropdown-${product.id}`"
                                         class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
                                         <ul class="py-1 text-sm text-gray-700 dark:text-gray-200"
                                             aria-labelledby="apple-imac-27-dropdown-button">
@@ -203,8 +317,8 @@ const openAddModal = () => {
                                                     class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Show</a>
                                             </li>
                                             <li>
-                                                <a href="#"
-                                                    class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Edit</a>
+                                                <button @click="openEditModal(product)"
+                                                    class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Edit</button>
                                             </li>
                                         </ul>
                                         <div class="py-1">
