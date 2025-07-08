@@ -20,7 +20,7 @@ Vshop adalah aplikasi manajemen gudang berbasis web yang dibuat dengan Laravel (
 ## 🧰 Teknologi yang Digunakan
 
 ### Backend
-- [Laravel 10+](https://laravel.com/)
+- [Laravel 12+](https://laravel.com/)
 - RESTful API
 - Laravel Sanctum (autentikasi SPA)
 
