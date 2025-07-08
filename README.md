@@ -39,7 +39,7 @@ Vshop adalah aplikasi manajemen gudang berbasis web yang dibuat dengan Laravel (
 ### 1. Clone Repository
 
 ```bash
-git clone https://github.com/username/vshop.git
+git clone https://github.com/anharsaja/vshop.git
 cd vshop
 
 
