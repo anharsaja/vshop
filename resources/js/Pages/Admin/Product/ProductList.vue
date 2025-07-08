@@ -1,11 +1,35 @@
 <script setup>
 import { usePage, router } from '@inertiajs/vue3';
 import { ref } from 'vue';
-
+import { Plus } from '@element-plus/icons-vue'
 
 const products = usePage().props.products;
 const brands = usePage().props.brands;
 const categories = usePage().props.categories;
+
+// Image Upload Handling
+const productImages = ref([]);
+const dialogImageUrl = ref('');
+const visiblePreview = ref(false)
+
+const handleFileChange = (uploadFile, uploadFiles) => {
+    // Generate local URL for preview
+    if (uploadFile.raw) {
+        uploadFile.url = URL.createObjectURL(uploadFile.raw);
+    }
+    productImages.value = uploadFiles;
+    visiblePreview.value = false
+};
+
+const handlePictureCardPreview = (file) => {
+    dialogImageUrl.value = file.url;
+    visiblePreview.value = true;
+};
+
+const handleRemove = (file, fileList) => {
+    productImages.value = fileList;
+};
+
 
 // product from data
 const id = ref('')
@@ -19,7 +43,6 @@ const category_id = ref('')
 const brand_id = ref('')
 const inStock = ref('')
 
-const productImages = ref([])
 // end
 
 // add product method
@@ -31,6 +54,7 @@ const AddProduct = async () => {
     formData.append('description', description.value)
     formData.append('brand_id', brand_id.value)
     formData.append('category_id', category_id.value)
+    // append product images to the formData
     for (const image of productImages.value) {
         formData.append('product_images[]', image.raw)
     }
@@ -63,7 +87,7 @@ const resetFormData = () => {
     quantity.value = ''
     description.value = ''
     productImages.value = []
-    // dialogImageUrl.value = ''
+    dialogImageUrl.value = ''
 }
 
 const isAddProduct = ref(false)
@@ -141,6 +165,26 @@ const openEditModal = (product) => {
                         class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         placeholder="Write the product description ..."></textarea>
                 </div>
+
+
+                <!-- multiple upload -->
+                <div class="relative z-0 w-full mb-5 group">
+                    <el-upload v-model:file-list="productImages" list-type="picture-card" multiple
+                        :on-preview="handlePictureCardPreview" :on-remove="handleRemove" :on-change="handleFileChange"
+                        :auto-upload="false">
+                        <el-icon>
+                            <Plus />
+                        </el-icon>
+                    </el-upload>
+
+                    <el-dialog v-model="visiblePreview" align-center>
+                        <div style="display: flex; justify-content: center; align-items: center; height: 100%;">
+                            <img :src="dialogImageUrl" alt="Preview Image"
+                                style="max-width: 100%; max-height: 80vh; object-fit: contain;" />
+                        </div>
+                    </el-dialog>
+                </div>
+
 
 
                 <button type="submit"
