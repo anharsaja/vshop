@@ -26,7 +26,23 @@ class ProductSeeder extends Seeder
             'price' => 33.25,
             'quantity' => 2,
             'category_id' => 2,
+            'brand_id' => 2,
+            'description' => 'Duis deserunt cillum amet dolor est deserunt. Sunt et aute magna irure et. Lorem labore reprehenderit ut amet minim. Enim labore exercitation pariatur enim. Nostrud esse amet occaecat irure qui nulla sit minim labore anim nulla. Elit nisi laboris adipisicing eu.'
+        ]);
+        Product::create([
+            'title' => 'Office H45 Pro',
+            'price' => 33.25,
+            'quantity' => 1,
+            'category_id' => 3,
             'brand_id' => 1,
+            'description' => 'Duis deserunt cillum amet dolor est deserunt. Sunt et aute magna irure et. Lorem labore reprehenderit ut amet minim. Enim labore exercitation pariatur enim. Nostrud esse amet occaecat irure qui nulla sit minim labore anim nulla. Elit nisi laboris adipisicing eu.'
+        ]);
+        Product::create([
+            'title' => 'Reactive Bearier',
+            'price' => 33.25,
+            'quantity' => 3,
+            'category_id' => 2,
+            'brand_id' => 2,
             'description' => 'Duis deserunt cillum amet dolor est deserunt. Sunt et aute magna irure et. Lorem labore reprehenderit ut amet minim. Enim labore exercitation pariatur enim. Nostrud esse amet occaecat irure qui nulla sit minim labore anim nulla. Elit nisi laboris adipisicing eu.'
         ]);
     }

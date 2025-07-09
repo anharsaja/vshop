@@ -99,10 +99,75 @@ const openAddModal = () => {
     editMode.value = false
     dialogVisible.value = true
 }
+
 const openEditModal = (product) => {
     editMode.value = true
     isAddProduct.value = false
     dialogVisible.value = true
+
+    // edit data
+    id.value = product.id
+    title.value = product.title
+    price.value = product.price
+    quantity.value = product.quantity
+    description.value = product.description
+    brand_id.value = product.brand_id
+    category_id.value = product.category_id
+    product_images.value = product.product_images
+}
+
+const deleteImage = async (pimage, index) => {
+    try {
+        await router.delete('/admin/products/image/' + pimage.id, {
+            onSuccess: (page) => {
+                product_images.value.splice(index, 1);
+                Swal.fire({
+                    toast: true,
+                    icon: 'success',
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    title: page.props.flash.success
+                })
+            }
+        })
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+// update product method
+const updateProduct = async () => {
+    const formData = new FormData();
+    formData.append('title', title.value)
+    formData.append('price', price.value)
+    formData.append('quantity', quantity.value)
+    formData.append('description', description.value)
+    formData.append('brand_id', brand_id.value)
+    formData.append('category_id', category_id.value)
+    formData.append('_method', 'PUT')
+    // append product images to the formData
+    for (const image of productImages.value) {
+        formData.append('product_images[]', image.raw)
+    }
+
+    try {
+        await router.post('products/update/' + id.value, formData, {
+            onSuccess: page => {
+                Swal.fire({
+                    toast: true,
+                    icon: 'success',
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    title: page.props.flash.success
+                })
+                window.location.reload();
+                dialogVisible.value = false
+                resetFormData()
+            }
+        })
+    } catch (error) {
+        console.log(error)
+    }
 }
 </script>
 
@@ -111,10 +176,10 @@ const openEditModal = (product) => {
 <template>
     <!-- dialog for adding product or editing-->
     <section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5">
-        <el-dialog v-model="dialogVisible" :title="editMode ? 'Edit Product' : 'Adding Product'" width="30%"
+        <el-dialog v-model="dialogVisible" :title="editMode ? 'Edit Product' : 'Adding Product'" width="35%" top="5vh"
             :before-close="handleClose">
             <!-- form start -->
-            <form class="max-w-md mx-auto" @submit.prevent="AddProduct">
+            <form class="mx-auto" @submit.prevent="editMode ? updateProduct() : AddProduct()">
                 <div class="relative z-0 w-full mb-5 group">
                     <input v-model="title" type="text" name="floating_title" id="floating_title"
                         class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
@@ -168,22 +233,43 @@ const openEditModal = (product) => {
 
 
                 <!-- multiple upload -->
-                <div class="relative z-0 w-full mb-5 group">
-                    <el-upload v-model:file-list="productImages" list-type="picture-card" multiple
-                        :on-preview="handlePictureCardPreview" :on-remove="handleRemove" :on-change="handleFileChange"
-                        :auto-upload="false">
-                        <el-icon>
-                            <Plus />
-                        </el-icon>
-                    </el-upload>
+                <div class="grid md:gap-6">
+                    <div class="relative z-0 w-full mb-5 group">
+                        <el-upload v-model:file-list="productImages" list-type="picture-card" multiple
+                            :on-preview="handlePictureCardPreview" :on-remove="handleRemove"
+                            :on-change="handleFileChange" :auto-upload="false">
+                            <el-icon>
+                                <Plus />
+                            </el-icon>
+                        </el-upload>
 
-                    <el-dialog v-model="visiblePreview" align-center>
-                        <div style="display: flex; justify-content: center; align-items: center; height: 100%;">
-                            <img :src="dialogImageUrl" alt="Preview Image"
-                                style="max-width: 100%; max-height: 80vh; object-fit: contain;" />
-                        </div>
-                    </el-dialog>
+                        <el-dialog v-model="visiblePreview" align-center>
+                            <div style="display: flex; justify-content: center; align-items: center; height: 100%;">
+                                <img :src="dialogImageUrl" alt="Preview Image"
+                                    style="max-width: 100%; max-height: 80vh; object-fit: contain;" />
+                            </div>
+                        </el-dialog>
+                    </div>
                 </div>
+
+                <!-- list of images for selected prodct -->
+                <div class="flex flex-nowrap mb-8 gap-2">
+                    <div v-for="(pimage, index) in product_images" :key="pimage.id"
+                        class="relative w-32 h-32 border border-gray-300 rounded overflow-hidden">
+
+                        <!-- Gambar -->
+                        <img class="w-full h-full object-cover" :src="`/${pimage.image}`" alt="">
+
+                        <!-- Tombol X (pojok kanan atas, tidak keluar) -->
+                        <span @click="deleteImage(pimage, index)"
+                            class="absolute top-1 right-1 w-4 h-4 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center cursor-pointer shadow">
+                            X
+                        </span>
+                    </div>
+                </div>
+
+
+                <!-- end -->
 
 
 
@@ -336,11 +422,23 @@ const openEditModal = (product) => {
                                 <th scope="row"
                                     class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{
                                         product.title }}</th>
-                                <td class="px-4 py-3">{{ product.category_id }}</td>
-                                <td class="px-4 py-3">{{ product.brand_id }}</td>
+                                <td class="px-4 py-3">{{ product.category.name }}</td>
+                                <td class="px-4 py-3">{{ product.brand.name }}</td>
                                 <td class="px-4 py-3">{{ product.quantity }}</td>
-                                <td class="px-4 py-3">{{ product.inStock }}</td>
-                                <td class="px-4 py-3">{{ product.published }}</td>
+                                <td class="px-4 py-3">
+                                    <span v-if="product.inStock == 0"
+                                        class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-green-900 dark:text-green-300">inStock</span>
+                                    <span v-else
+                                        class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-red-900 dark:text-red-300">Out
+                                        of Stock</span>
+                                </td>
+                                <td class="px-4 py-3">
+                                    <button type="button" v-if="product.published == 0"
+                                        class="px-3 py-2 text-xs font-medium text-center text-white bg-green-700 rounded-lg hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">Published</button>
+                                    <button type="button" v-else
+                                        class="px-3 py-2 text-xs font-medium text-center text-white bg-red-700 rounded-lg hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Un
+                                        Published</button>
+                                </td>
                                 <td class="px-4 py-3">{{ product.price }}</td>
                                 <td class="px-4 py-3 flex items-center justify-end">
                                     <button :id="`dropdown-button-${product.id}`"
@@ -356,14 +454,14 @@ const openEditModal = (product) => {
                                     <div :id="`dropdown-${product.id}`"
                                         class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
                                         <ul class="py-1 text-sm text-gray-700 dark:text-gray-200"
-                                            aria-labelledby="apple-imac-27-dropdown-button">
+                                            :aria-labelledby="`dropdown-button-${product.id}`">
                                             <li>
                                                 <a href="#"
                                                     class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Show</a>
                                             </li>
                                             <li>
                                                 <button @click="openEditModal(product)"
-                                                    class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Edit</button>
+                                                    class="w-full text-left block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Edit</button>
                                             </li>
                                         </ul>
                                         <div class="py-1">
