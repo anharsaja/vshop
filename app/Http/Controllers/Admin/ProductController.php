@@ -101,7 +101,12 @@ class ProductController extends Controller
 
         // Hapus record dari database
         $image->delete();
-        // $image = ProductImage::where('id', $id)->delete();
         return redirect()->route('admin.products.index')->with('success', 'Image deleted successfully');
+    }
+
+    public function destroy($id)
+    {
+        $product = Product::findOrFail($id)->delete();
+        return redirect()->route('admin.products.index')->with('success', 'Products deleted successfully.');
     }
 }

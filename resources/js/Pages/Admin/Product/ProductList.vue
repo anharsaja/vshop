@@ -5,7 +5,7 @@ import { Plus } from '@element-plus/icons-vue'
 
 // const products = usePage().props.products;
 defineProps({
-    products:Array
+    products: Array
 })
 const brands = usePage().props.brands;
 const categories = usePage().props.categories;
@@ -70,6 +70,7 @@ const AddProduct = async () => {
                     icon: 'success',
                     position: 'top-end',
                     showConfirmButton: false,
+                    timer: 3000,
                     title: page.props.flash.success
                 })
                 // window.location.reload();
@@ -129,6 +130,7 @@ const deleteImage = async (pimage, index) => {
                     icon: 'success',
                     position: 'top-end',
                     showConfirmButton: false,
+                    timer: 3000,
                     title: page.props.flash.success
                 })
             }
@@ -161,6 +163,7 @@ const updateProduct = async () => {
                     icon: 'success',
                     position: 'top-end',
                     showConfirmButton: false,
+                    timer: 3000,
                     title: page.props.flash.success
                 })
                 // window.location.reload();
@@ -171,6 +174,40 @@ const updateProduct = async () => {
     } catch (error) {
         console.log(error)
     }
+}
+
+// delete product method
+const deleteProduct = (product, index) => {
+    Swal.fire({
+        title: 'Are you Sure',
+        text: 'This action cannot undo!',
+        incon: 'watning',
+        showCancelButton: true,
+        confirmButtonColor: '#3A59D1',
+        cancelButtonColor: '#d33',
+        cancelButtonText: 'no',
+        confirmButtonText: 'yes, delete!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            try {
+                router.delete('products/destroy/' + product.id, {
+                    onSuccess: (page) => {
+                        Swal.fire({
+                            toast: true,
+                            icon: 'success',
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            title: page.props.flash.success
+                        });
+                        this.delete(product, index);
+                    }
+                })
+            } catch (err) {
+                console.log(err)
+            }
+        }
+    })
 }
 </script>
 
@@ -459,16 +496,12 @@ const updateProduct = async () => {
                                         <ul class="py-1 text-sm text-gray-700 dark:text-gray-200"
                                             :aria-labelledby="`dropdown-button-${product.id}`">
                                             <li>
-                                                <a href="#"
-                                                    class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Show</a>
-                                            </li>
-                                            <li>
                                                 <button @click="openEditModal(product)"
                                                     class="w-full text-left block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Edit</button>
                                             </li>
                                         </ul>
                                         <div class="py-1">
-                                            <a href="#"
+                                            <a href="#" @click="deleteProduct(product, index)"
                                                 class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Delete</a>
                                         </div>
                                     </div>
