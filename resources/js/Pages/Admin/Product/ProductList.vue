@@ -3,7 +3,10 @@ import { usePage, router } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import { Plus } from '@element-plus/icons-vue'
 
-const products = usePage().props.products;
+// const products = usePage().props.products;
+defineProps({
+    products:Array
+})
 const brands = usePage().props.brands;
 const categories = usePage().props.categories;
 
@@ -69,7 +72,7 @@ const AddProduct = async () => {
                     showConfirmButton: false,
                     title: page.props.flash.success
                 })
-                window.location.reload();
+                // window.location.reload();
                 dialogVisible.value = false
                 resetFormData()
             }
@@ -160,7 +163,7 @@ const updateProduct = async () => {
                     showConfirmButton: false,
                     title: page.props.flash.success
                 })
-                window.location.reload();
+                // window.location.reload();
                 dialogVisible.value = false
                 resetFormData()
             }
