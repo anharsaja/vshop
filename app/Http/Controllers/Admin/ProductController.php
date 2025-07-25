@@ -9,6 +9,7 @@ use App\Models\Category;
 use Illuminate\Support\Str;
 use App\Models\ProductImage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
 
@@ -106,7 +107,19 @@ class ProductController extends Controller
 
     public function destroy($id)
     {
-        $product = Product::findOrFail($id)->delete();
+        // $product = Product::findOrFail($id)->delete();
+        $product = Product::with('product_images')->findOrFail($id);
+        DB::transaction(function () use ($product) {
+            foreach ($product->product_images as $image) {
+                $path = public_path($image->image); // contoh: public/product_images/xxxx.jpg
+                if (File::exists($path)) {
+                    File::delete($path);
+                }
+                $image->delete();
+            }
+            $product->delete();
+        });
+        // return redirect()->route('admi/*  */n.products.index')->with('success', 'Products deleted successfully.');
         return redirect()->route('admin.products.index')->with('success', 'Products deleted successfully.');
     }
 }
