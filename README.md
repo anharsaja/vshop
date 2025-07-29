@@ -6,14 +6,14 @@ Vshop adalah aplikasi manajemen gudang berbasis web yang dibuat dengan Laravel (
 
 ## 🚀 Fitur Utama
 
-- [x]✅ Manajemen Produk: Tambah, edit, hapus produk
-- [x]📦 Manajemen Stok: Update jumlah stok, status in-stock / out-of-stock
-- [x]💰 Manajemen Harga: Atur dan ubah harga jual produk
-- [ ]📢 Status Publikasi: Tandai produk sebagai published / draft
-- [x]🖼️ Upload Gambar Produk
-- [ ]🔍 Pencarian dan filter produk
-- [ ]📊 Dashboard ringkasan stok dan statistik produk
-- [x]🔐 Autentikasi pengguna (Login & Register)
+- [x]  ✅ Manajemen Produk: Tambah, edit, hapus produk
+- [x]  📦 Manajemen Stok: Update jumlah stok, status in-stock / out-of-stock
+- [x]  💰 Manajemen Harga: Atur dan ubah harga jual produk
+- [ ]  📢 Status Publikasi: Tandai produk sebagai published / draft
+- [x]  🖼️ Upload Gambar Produk
+- [ ]  🔍 Pencarian dan filter produk
+- [ ]  📊 Dashboard ringkasan stok dan statistik produk
+- [x]  🔐 Autentikasi pengguna (Login & Register)
 
 ---
 
