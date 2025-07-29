@@ -6,14 +6,14 @@ Vshop adalah aplikasi manajemen gudang berbasis web yang dibuat dengan Laravel (
 
 ## 🚀 Fitur Utama
 
-- ✅ Manajemen Produk: Tambah, edit, hapus produk
-- 📦 Manajemen Stok: Update jumlah stok, status in-stock / out-of-stock
-- 💰 Manajemen Harga: Atur dan ubah harga jual produk
-- 📢 Status Publikasi: Tandai produk sebagai published / draft
-- 🖼️ Upload Gambar Produk
-- 🔍 Pencarian dan filter produk
-- 📊 Dashboard ringkasan stok dan statistik produk
-- 🔐 Autentikasi pengguna (Login & Register)
+- [x]✅ Manajemen Produk: Tambah, edit, hapus produk
+- [x]📦 Manajemen Stok: Update jumlah stok, status in-stock / out-of-stock
+- [x]💰 Manajemen Harga: Atur dan ubah harga jual produk
+- [ ]📢 Status Publikasi: Tandai produk sebagai published / draft
+- [x]🖼️ Upload Gambar Produk
+- [ ]🔍 Pencarian dan filter produk
+- [ ]📊 Dashboard ringkasan stok dan statistik produk
+- [x]🔐 Autentikasi pengguna (Login & Register)
 
 ---
 
@@ -22,7 +22,7 @@ Vshop adalah aplikasi manajemen gudang berbasis web yang dibuat dengan Laravel (
 ### Backend
 - [Laravel 12+](https://laravel.com/)
 - RESTful API
-- Laravel Sanctum (autentikasi SPA)
+- Laravel Inertia 
 
 ### Frontend
 - [Vue 3 (Composition API)](https://vuejs.org/)
@@ -30,7 +30,6 @@ Vshop adalah aplikasi manajemen gudang berbasis web yang dibuat dengan Laravel (
 - [Tailwind CSS](https://tailwindcss.com/)
 - [Flowbite](https://flowbite.com/) (komponen UI berbasis Tailwind)
 - [Vue Router](https://router.vuejs.org/) (navigasi halaman)
-- [Pinia](https://pinia.vuejs.org/) (state management)
 
 ---
 
@@ -84,4 +83,3 @@ Proyek ini masih dalam tahap pengembangan. Feedback dan kontribusi sangat diteri
 
 Kalau kamu punya struktur frontend terpisah (misalnya folder `frontend` untuk Vue), bisa disesuaikan. Tapi kalau frontend-nya langsung di `resources/js`, tinggal hapus bagian `cd frontend`.
 
-Mau sekalian saya bantu bikin dokumentasi API atau struktur database juga?
