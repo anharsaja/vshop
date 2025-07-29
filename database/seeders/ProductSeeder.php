@@ -14,36 +14,42 @@ class ProductSeeder extends Seeder
     public function run(): void
     {
         Product::create([
-            'title' => 'Gaming X6 Pro',
-            'price' => 19.03,
-            'quantity' => 3,
+            'title' => 'Floral Essence Eau de Parfum',
+            'price' => 45.00,
+            'quantity' => 10,
             'category_id' => 1,
             'brand_id' => 1,
-            'description' => 'Aliquip mollit voluptate velit in occaecat nisi consectetur sit id non. Ad ullamco veniam magna nostrud dolore officia laboris aliquip irure. Lorem labore incididunt officia enim irure ad quis fugiat ad irure laboris. Anim enim laboris anim sit esse reprehenderit qui magna cillum aliquip qui ad voluptate. Eiusmod laboris dolore non in cupidatat officia ea sint pariatur.'
+            'description' => 'Parfum dengan aroma bunga yang lembut dan menyegarkan. Cocok untuk digunakan sepanjang hari agar tetap wangi dan percaya diri.'
         ]);
+
+        // Lotion
         Product::create([
-            'title' => 'Hard X7 Series',
-            'price' => 33.25,
-            'quantity' => 2,
+            'title' => 'HydraMoist Body Lotion',
+            'price' => 22.50,
+            'quantity' => 15,
             'category_id' => 2,
             'brand_id' => 2,
-            'description' => 'Duis deserunt cillum amet dolor est deserunt. Sunt et aute magna irure et. Lorem labore reprehenderit ut amet minim. Enim labore exercitation pariatur enim. Nostrud esse amet occaecat irure qui nulla sit minim labore anim nulla. Elit nisi laboris adipisicing eu.'
+            'description' => 'Lotion pelembap dengan kandungan aloe vera dan vitamin E untuk menjaga kelembapan kulit sepanjang hari.'
         ]);
+
+        // Sun Screen
         Product::create([
-            'title' => 'Office H45 Pro',
-            'price' => 33.25,
-            'quantity' => 1,
+            'title' => 'SunShield SPF 50+ PA+++',
+            'price' => 18.75,
+            'quantity' => 8,
             'category_id' => 3,
             'brand_id' => 1,
-            'description' => 'Duis deserunt cillum amet dolor est deserunt. Sunt et aute magna irure et. Lorem labore reprehenderit ut amet minim. Enim labore exercitation pariatur enim. Nostrud esse amet occaecat irure qui nulla sit minim labore anim nulla. Elit nisi laboris adipisicing eu.'
+            'description' => 'Sunscreen ringan dengan perlindungan tinggi terhadap sinar UVA dan UVB. Tidak lengket dan cepat meresap.'
         ]);
+
+        // Hair Tonic
         Product::create([
-            'title' => 'Reactive Bearier',
-            'price' => 33.25,
-            'quantity' => 3,
-            'category_id' => 2,
+            'title' => 'Revive Hair Tonic Herbal',
+            'price' => 30.00,
+            'quantity' => 6,
+            'category_id' => 4,
             'brand_id' => 2,
-            'description' => 'Duis deserunt cillum amet dolor est deserunt. Sunt et aute magna irure et. Lorem labore reprehenderit ut amet minim. Enim labore exercitation pariatur enim. Nostrud esse amet occaecat irure qui nulla sit minim labore anim nulla. Elit nisi laboris adipisicing eu.'
+            'description' => 'Hair tonic dengan ekstrak ginseng dan menthol untuk merangsang pertumbuhan rambut dan menyegarkan kulit kepala.'
         ]);
     }
 }
