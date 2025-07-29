@@ -24,7 +24,7 @@ const auth = usePage().props.auth;
 
             <!-- dropdown -->
             <div v-if="canLogin" class="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
-                <div class="pr-2">
+                <div v-if="auth.user" class="pr-2">
                     <button type="button"
                         class="flex text-sm bg-gray-300 rounded-full md:me-0 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-100">
                         <img class="w-8 h-8 rounded-full"
@@ -56,7 +56,7 @@ const auth = usePage().props.auth;
                     </Link>
                 </div>
 
-                <div class="pl-2">
+                <div v-if="auth.user" class="pl-2">
                     <button type="button"
                         class="flex text-sm bg-gray-300 rounded-full md:me-0 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-100">
                         <img class="w-8 h-8 rounded-full"
